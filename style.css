@@ -31,20 +31,28 @@
   filter: invert(0) grayscale(0);
 }
 
-[data-bs-theme=dark] .carousel-indicator .active {
+[data-bs-theme="light"] .carousel-dark .carousel-indicators [data-bs-target] {
+  background-color: #fff;
+}
+
+[data-bs-theme="dark"] .carousel-dark .carousel-indicators [data-bs-target] {
+  background-color: #999696;
+}
+
+[data-bs-theme=dark] .carousel-indicator.active {
   background-color: #fff;
 }
 
 [data-bs-theme=dark] .carousel-indicator {
-  background-color: #cdc8c8;
-}
-
-[data-bs-theme=light] .carousel-indicator .active {
-  background-color: #000;
+  background-color: #a19c9c;
 }
 
 [data-bs-theme=light] .carousel-indicator {
-  background-color: #cdc8c8;
+  background-color: #ada9a9;
+}
+
+[data-bs-theme=light] .carousel-indicator.active {
+  background-color: #000;
 }
 
 [data-bs-theme="light"] .app-footer {
@@ -68,8 +76,8 @@
 }
 
 .carousel-img {
-  width: 350px;
-  height: 500px;
+  width: 450px;
+  height: 600px;
   border-radius: 10px;
 }
 
@@ -87,9 +95,8 @@
 
 .carousel-most-rating-img {
   width: 365px;
-  height: 130px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  height: 200px;
+  border-radius: 10px;
   padding-left: 5px;
 }
 

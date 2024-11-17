@@ -60,9 +60,14 @@ export default {
       this.reviewsError = null;
 
       try {
-        const url = `${TYPE.DETAIL}/${CLASS.REVIEW}?movieId=${this.movieId}`;
+        const url = `${TYPE.GET}/${CLASS.REVIEW}/?movieId=${this.movieId}`;
         const response = await fetchFromUrl(url);
-        this.reviews = response.item.items;
+        console.log(response);
+        if (response.total > 0) {
+          this.reviews = response.items[0].items;
+        } else {
+          this.reviews = [];
+        }
       } catch (err) {
         this.reviewsError = "Failed to fetch reviews. Please try again.";
         console.error("Error fetching reviews:", err);
@@ -150,7 +155,10 @@ export default {
             <p class="card-text"><strong>Genre:</strong> {{ getGenre(movie) }}</p>
             <p class="card-text"><strong>Plot:</strong> {{ movie.plot }}</p>
             <p class="card-text"><strong>Director:</strong> {{ formatDirectorList(movie.directorList) }}</p>
-            <p class="card-text"><strong>Actors:</strong> <span v-html="formatActorList(movie.actorList)"></span></p>
+            <p class="card-text">
+              <strong>Actors:</strong>
+              <span v-html="formatActorList(movie.actorList)"></span>
+            </p>
           </div>
         </div>
       </div>
@@ -166,6 +174,11 @@ export default {
       {{ reviewsError }}
     </div>
 
+    <div v-if="!reviewsLoading && reviews.length === 0">
+      <div class="alert alert-info mt-4" role="alert">
+        No reviews available for this movie.
+      </div>
+    </div>
     <div v-if="!reviewsLoading && reviews.length" class="mt-4">
       <h5>Reviews</h5>
       <ul class="list-group">

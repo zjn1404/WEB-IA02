@@ -28,7 +28,6 @@ export const fetchFromUrl = async (urlString) => {
     const [path, queryString] = urlString.split("?");
     const [type, dataClass, pattern] = path.split("/");
     const queryParams = new URLSearchParams(queryString);
-
     let data;
 
     switch (type) {
@@ -81,12 +80,19 @@ const handleDetail = async (dataClass, pattern) => {
     detail: pattern,
     item: data.filter((item) => item.id === pattern)[0],
   };
-  console.log("dbProvider", response);
   return response;
 };
 
 const handleGet = async (dataClass, queryParams) => {
   const data = await fetchAll(dataClass);
+
+  const filters = Object.fromEntries(queryParams.entries()); 
+
+  delete filters.page;
+  delete filters.per_page;
+
+  const filteredData = applyFilters(data, filters);
+
   const page = parseInt(queryParams.get("page"));
   const per_page = parseInt(queryParams.get("per_page"));
 
@@ -96,13 +102,13 @@ const handleGet = async (dataClass, queryParams) => {
     page: page,
     per_page: per_page,
     total_page: Math.ceil(
-      data.length / (parseInt(queryParams.get("per_page")) || 1)
+      filteredData.length / (parseInt(queryParams.get("per_page")) || 1)
     ),
-    total: data.length,
+    total: filteredData.length,
     items:
       !isNaN(page) || !isNaN(per_page)
-        ? applyPagination(data, queryParams)
-        : data,
+        ? applyPagination(filteredData, queryParams)
+        : filteredData,
   };
 
   return response;
@@ -135,6 +141,21 @@ const fetchAll = async (dataClass) => {
     throw new Error(`Failed to fetch data for class: ${dataClass}`);
   }
   return await response.json();
+};
+
+const applyFilters = (data, filters) => {
+  return data.filter((item) =>
+    Object.keys(filters).every((key) => {
+      const filterValue = filters[key];
+      const itemValue = item[key];
+
+      if (typeof itemValue === "string" && typeof filterValue === "string") {
+        return itemValue.toLowerCase().includes(filterValue.toLowerCase());
+      }
+
+      return itemValue === filterValue;
+    })
+  );
 };
 
 const applyPagination = (data, queryParams) => {

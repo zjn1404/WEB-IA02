@@ -92,10 +92,13 @@ export default {
 
     formatActorList(actorList) {
       return actorList
-        .map(
-          (actor) =>
-            `<a href="/actor/${actor.id}" class="text-decoration-none">${actor.name}</a> as ${actor.asCharacter}`
-        )
+        .map((actor) => {
+          if (actor.asCharacter) {
+        return `<span class="text-primary" style="cursor: pointer" data-actor-id="${actor.id}">${actor.name}</span> as ${actor.asCharacter}`;
+          } else {
+        return `<span class="text-primary" style="cursor: pointer" data-actor-id="${actor.id}">${actor.name}</span>`;
+          }
+        })
         .join(", ");
     },
 
@@ -122,6 +125,17 @@ export default {
       if (rating.theMovieDb)
         formattedRatings.push(`TheMovieDb: ${rating.theMovieDb}`);
       return formattedRatings.join(", ");
+    },
+
+    navigateToActor(actorId) {
+      this.$emit("actor-selected", actorId);
+    },
+
+    handleActorClick(event) {
+      const actorId = event.target.dataset.actorId;
+      if (actorId) {
+        this.navigateToActor(actorId);
+      }
     },
   },
 
@@ -151,13 +165,12 @@ export default {
           <div class="card-body">
             <h5 class="card-title">{{ movie.title }} ({{ movie.year }})</h5>
             <p class="card-text"><strong>Rating:</strong> {{ formatRating(movie.ratings) }}</p>
-            <p class="card-text"><strong>Release:</strong> {{ formatDate(movie.releaseDate) }}</p>
             <p class="card-text"><strong>Genre:</strong> {{ getGenre(movie) }}</p>
             <p class="card-text"><strong>Plot:</strong> {{ movie.plot }}</p>
             <p class="card-text"><strong>Director:</strong> {{ formatDirectorList(movie.directorList) }}</p>
             <p class="card-text">
-              <strong>Actors:</strong>
-              <span v-html="formatActorList(movie.actorList)"></span>
+              <strong>Actors: </strong>
+              <span v-html="formatActorList(movie.actorList)" @click="handleActorClick"></span>
             </p>
           </div>
         </div>

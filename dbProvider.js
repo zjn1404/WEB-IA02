@@ -75,6 +75,7 @@ const handleSearch = async (dataClass, pattern, queryParams) => {
 
 const handleDetail = async (dataClass, pattern) => {
   const data = await fetchAll(dataClass);
+
   const response = {
     ...DetailResponse,
     detail: pattern,
@@ -86,7 +87,7 @@ const handleDetail = async (dataClass, pattern) => {
 const handleGet = async (dataClass, queryParams) => {
   const data = await fetchAll(dataClass);
 
-  const filters = Object.fromEntries(queryParams.entries()); 
+  const filters = Object.fromEntries(queryParams.entries());
 
   delete filters.page;
   delete filters.per_page;

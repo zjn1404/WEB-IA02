@@ -1,0 +1,129 @@
+[data-bs-theme="light"] .app-header {
+  background-color: #eedbda;
+  color: #5d372f;
+  border-radius: 20px;
+  border: solid 3px #e7ced2;
+}
+
+[data-bs-theme="dark"] .app-header {
+  background-color: #5d372f;
+  color: #eedbda;
+  border-radius: 20px;
+  border: solid 3px #74524c;
+}
+
+[data-bs-theme="light"] .app-navbar {
+  background-color: #d6e1fa;
+}
+
+[data-bs-theme="dark"] .app-navbar {
+  background-color: #0d1c40;
+}
+
+
+[data-bs-theme="light"] .carousel-control-prev-icon,
+[data-bs-theme="light"] .carousel-control-next-icon {
+  filter: invert(0%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(40%) contrast(100%);
+}
+
+[data-bs-theme="dark"] .carousel .carousel-control-prev-icon,
+[data-bs-theme="dark"] .carousel .carousel-control-next-icon {
+  filter: invert(0) grayscale(0);
+}
+
+[data-bs-theme=dark] .carousel-indicator .active {
+  background-color: #fff;
+}
+
+[data-bs-theme=dark] .carousel-indicator {
+  background-color: #cdc8c8;
+}
+
+[data-bs-theme=light] .carousel-indicator .active {
+  background-color: #000;
+}
+
+[data-bs-theme=light] .carousel-indicator {
+  background-color: #cdc8c8;
+}
+
+[data-bs-theme="light"] .app-footer {
+  background-color: #ccced0;
+  color: #393d3f;
+}
+
+[data-bs-theme="dark"] .app-footer {
+  background-color: #181a1b;
+  color: #fff;
+}
+
+[data-bs-theme="light"] {
+  background-color: #fff;
+  color: #393d3f;
+}
+
+[data-bs-theme="dark"] {
+  background-color: #393d3f;
+  color: #fff;
+}
+
+.carousel-img {
+  width: 350px;
+  height: 500px;
+  border-radius: 10px;
+}
+
+.carousel-caption {
+  font-family: 'Times New Roman', Times, serif;
+  color: #dcce5e !important;
+}
+
+.carousel-most-popular-img {
+  width: 365px;
+  height: 200px;
+  border-radius: 10px;
+  padding-left: 5px;
+}
+
+.carousel-most-rating-img {
+  width: 365px;
+  height: 130px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  padding-left: 5px;
+}
+
+.carousel-indicator {
+  width: 30px;
+  height: 3px;
+  padding: 0;
+  border: none;
+}
+
+.carousel {
+  overflow: visible;
+}
+
+.carousel-inner {
+  overflow: visible;
+}
+
+.carousel-item {
+  overflow: visible;
+}
+
+.custom-hover-img {
+  display: block; 
+  transition: transform 0.5s ease, z-index 0.5s ease;
+  position: relative;
+}
+
+.custom-hover-img:hover {
+  transform: scale(1.5); 
+  z-index: 10; 
+}
+
+.app-footer {
+  border-radius: 10px;
+  border: solid 1px #989494;
+}

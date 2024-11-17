@@ -54,8 +54,12 @@ export const fetchFromUrl = async (urlString) => {
 
 const handleSearch = async (dataClass, pattern, queryParams) => {
   const data = await fetchAll(dataClass);
-  const filteredData = data.filter((item) =>
-    item.title?.toLowerCase().includes(pattern.toLowerCase())
+  const filteredData = data.filter(
+    (item) =>
+      item.title?.toLowerCase().includes(pattern.toLowerCase()) ||
+      item.actorList?.some((actor) =>
+        actor.name.toLowerCase().includes(pattern.toLowerCase())
+      )
   );
   return {
     ...SearchResponse,
@@ -81,17 +85,25 @@ const handleDetail = async (dataClass, pattern) => {
 
 const handleGet = async (dataClass, queryParams) => {
   const data = await fetchAll(dataClass);
-  return {
+  const page = parseInt(queryParams.get("page"));
+  const per_page = parseInt(queryParams.get("per_page"));
+
+  const response = {
     ...GetResponse,
     get: dataClass,
-    page: parseInt(queryParams.get("page")) || 1,
-    per_page: parseInt(queryParams.get("per_page")) || 15,
+    page: page,
+    per_page: per_page,
     total_page: Math.ceil(
-      data.length / (parseInt(queryParams.get("per_page")) || 15)
+      data.length / (parseInt(queryParams.get("per_page")) || 1)
     ),
     total: data.length,
-    items: applyPagination(data, queryParams),
+    items:
+      !isNaN(page) || !isNaN(per_page)
+        ? applyPagination(data, queryParams)
+        : data,
   };
+
+  return response;
 };
 
 const fetchAll = async (dataClass) => {

@@ -10,6 +10,22 @@ const app = Vue.createApp({
     comBody: comBody,
     comFooter: comFooter,
   },
+
+  data() {
+    return {
+      selectedMovieId: null,
+    };
+  },
+
+  methods: {
+    handleSearch(term) {
+      this.$refs.body.handleSearch(term);
+    },
+
+    handleMovieNavigation(movieId) {
+      this.selectedMovieId = movieId;
+    },
+  },
 });
 
 app.mount("#app");

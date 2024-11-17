@@ -126,7 +126,7 @@ export default {
     },
 
     navigateToMovie(movieId) {
-      this.$emit("navigate", movieId);
+      this.$emit("movie-selected", movieId);
     },
   },
 
@@ -199,13 +199,14 @@ export default {
           :key="'popular-slide-' + slideIndex"
           class="carousel-item"
           :class="{ active: isSlideActive(slideIndex, 'popular') }">
-          <div class="d-flex justify-content-center" style="width: 100%; cursor:pointer;" @click="navigateToMovie(movie.id)">
-            <img 
-              v-for="(movie, movieIndex) in slide"
-              :key="'popular-movie-' + movieIndex"
-              :src="movie.image"
-              class="carousel-most-popular-img custom-hover-img"
-              :alt="movie.title">
+          <div class="d-flex justify-content-center">
+            <div v-for="(movie, movieIndex) in slide" style="width: 100%; cursor:pointer;" @click="navigateToMovie(movie.id)">
+              <img 
+                :key="'popular-movie-' + movieIndex"
+                :src="movie.image"
+                class="carousel-most-popular-img custom-hover-img"
+                :alt="movie.title">
+            </div>
           </div>
         </div>
       </div>
@@ -244,13 +245,14 @@ export default {
           :key="'rating-slide-' + slideIndex"
           class="carousel-item"
           :class="{ active: isSlideActive(slideIndex, 'rating') }">
-          <div class="d-flex justify-content-center" style="width: 100%; cursor: pointer;" @click="navigateToMovie(movie.id)">
-            <img 
-              v-for="(movie, movieIndex) in slide"
-              :key="'rating-movie-' + movieIndex"
-              :src="movie.image"
-              class="carousel-most-rating-img custom-hover-img"
-              :alt="movie.title">
+          <div class="d-flex justify-content-center">
+            <div v-for="(movie, movieIndex) in slide"  style="width: 100%; cursor: pointer;" @click="navigateToMovie(movie.id)">
+              <img 
+                :key="'rating-movie-' + movieIndex"
+                :src="movie.image"
+                class="carousel-most-rating-img custom-hover-img"
+                :alt="movie.title">
+            </div>
           </div>
         </div>
       </div>

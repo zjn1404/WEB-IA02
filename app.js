@@ -21,10 +21,6 @@ const app = Vue.createApp({
     handleSearch(term) {
       this.$refs.body.handleSearch(term);
     },
-
-    handleMovieNavigation(movieId) {
-      this.selectedMovieId = movieId;
-    },
   },
 });
 

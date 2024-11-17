@@ -98,7 +98,7 @@ export default {
     },
 
     navigateToMovie(movieId) {
-      this.$emit("navigate", movieId);
+      this.$emit("movie-selected", movieId);
     },
   },
 
@@ -116,7 +116,11 @@ export default {
 
       <div v-if="!loading && movies.length" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         <div v-for="movie in movies" :key="movie.id" class="col">
-          <div class="card h-100" style="cursor: pointer;" @click="navigateToMovie(movie.id)">
+          <div 
+            class="card h-100" 
+            style="cursor: pointer;" 
+            @click="navigateToMovie(movie.id)"
+          >
             <img 
               :src="movie.image" 
               class="card-img-top"

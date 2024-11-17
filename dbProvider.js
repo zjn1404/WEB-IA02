@@ -76,11 +76,13 @@ const handleSearch = async (dataClass, pattern, queryParams) => {
 
 const handleDetail = async (dataClass, pattern) => {
   const data = await fetchAll(dataClass);
-  return {
+  const response = {
     ...DetailResponse,
     detail: pattern,
-    item: data.filter((item) => item.title === pattern),
+    item: data.filter((item) => item.id === pattern)[0],
   };
+  console.log("dbProvider", response);
+  return response;
 };
 
 const handleGet = async (dataClass, queryParams) => {

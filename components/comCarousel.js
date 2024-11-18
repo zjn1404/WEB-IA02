@@ -11,6 +11,7 @@ export default {
       activeRatingIndex: 0,
       activeRevenueIndex: 0,
       itemsPerSlide: 3,
+      hoveredMovieTitle: null,
     };
   },
 
@@ -95,6 +96,7 @@ export default {
     },
 
     getGenre(movie) {
+      if (!movie.genreList) return "";
       return (
         "[ " + movie.genreList.map((genre) => genre.value).join(", ") + " ]"
       );
@@ -127,6 +129,11 @@ export default {
 
     navigateToMovie(movieId) {
       this.$emit("movie-selected", movieId);
+    },
+
+    setHoveredMovieTitle(title) {
+      console.log(title);
+      this.hoveredMovieTitle = title;
     },
   },
 
@@ -200,12 +207,18 @@ export default {
           class="carousel-item"
           :class="{ active: isSlideActive(slideIndex, 'popular') }">
           <div class="d-flex justify-content-center">
-            <div v-for="(movie, movieIndex) in slide" style="width: 100%; cursor:pointer;" @click="navigateToMovie(movie.id)">
-              <img 
-                :key="'popular-movie-' + movieIndex"
-                :src="movie.image"
-                class="carousel-most-popular-img custom-hover-img"
-                :alt="movie.title">
+            <div v-for="(movie, movieIndex) in slide" class="p-1" style="cursor:pointer;" @click="navigateToMovie(movie.id)" @mouseover="setHoveredMovieTitle(movie.fullTitle)" @mouseleave="setHoveredMovieTitle(null)">
+              <div class="card custom-hover-img" style="width: 365px">
+                <img 
+                  :src="movie.image"
+                  class="card-img-top "
+                  :alt="movie.title"
+                  style="height: 200px;"
+                />
+                <div v-if="hoveredMovieTitle === movie.fullTitle" class="card-body">
+                  <h5 class="card-title mb-0">{{ hoveredMovieTitle }}</h5>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -246,12 +259,18 @@ export default {
           class="carousel-item"
           :class="{ active: isSlideActive(slideIndex, 'rating') }">
           <div class="d-flex justify-content-center">
-            <div v-for="(movie, movieIndex) in slide"  style="width: 100%; cursor: pointer;" @click="navigateToMovie(movie.id)">
-              <img 
-                :key="'rating-movie-' + movieIndex"
-                :src="movie.image"
-                class="carousel-most-rating-img custom-hover-img"
-                :alt="movie.title">
+            <div v-for="(movie, movieIndex) in slide" class="p-1" style="cursor: pointer;" @click="navigateToMovie(movie.id)" @mouseover="setHoveredMovieTitle(movie.fullTitle)" @mouseleave="setHoveredMovieTitle(null)">
+              <div class="card custom-hover-img p-0" style="width: 365px">
+                <img 
+                  :src="movie.image"
+                  class="card-img-top"
+                  :alt="movie.title"
+                  style="height: 200px;"
+                />
+                <div v-if="hoveredMovieTitle === movie.fullTitle" class="card-body">
+                  <h5 class="card-title mb-0">{{ hoveredMovieTitle }}</h5>
+                </div>
+              </div>
             </div>
           </div>
         </div>

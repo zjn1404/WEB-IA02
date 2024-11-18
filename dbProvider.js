@@ -160,8 +160,18 @@ const applyFilters = (data, filters) => {
 };
 
 const applyPagination = (data, queryParams) => {
-  const perPage = parseInt(queryParams.get("per_page")) || 3;
-  const page = parseInt(queryParams.get("page")) || 1;
+  let perPage = parseInt(queryParams.get("per_page"));
+  let page = parseInt(queryParams.get("page"));
+
+  if (isNaN(perPage) && isNaN(page)) {
+    return data;
+  }
+  
+  if (isNaN(perPage)) {
+    perPage = 3;
+  } else if (isNaN(page)) {
+    page = 1;
+  }
 
   const startIndex = (page - 1) * perPage;
   const endIndex = startIndex + perPage;

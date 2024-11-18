@@ -23,20 +23,19 @@ export default {
     handleSearch(term) {
       this.searchTerm = term;
       this.selectedMovieId = null;
-      selectedActorId = null;
+      this.selectedActorId = null;
     },
 
     handleMovieSelect(movieId) {
       this.selectedMovieId = movieId;
       this.searchTerm = null;
-      console.log("Selected movie ID:", this.selectedMovieId);
+      this.selectedActorId = null;
     },
 
     handleActorSelect(actorId) {
       this.selectedActorId = actorId;
       this.selectedMovieId = null;
       this.searchTerm = null;
-      console.log("Selected actor ID:", this.selectedActorId);
     },
   },
 
@@ -58,7 +57,8 @@ export default {
       </com-movie-detail>
       <com-actor-actress-detail
         v-if="this.selectedActorId"
-        :actorId="this.selectedActorId">
+        :actorId="this.selectedActorId"
+        @movie-selected="handleMovieSelect">
       </com-actor-actress-detail>
     </div>
   `,

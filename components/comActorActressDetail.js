@@ -43,17 +43,12 @@ export default {
     async fetchMovieDetails() {
       this.loading = true;
       this.error = null;
-
-      if (this.actor && this.actor.castMovies) {
+      if (this.actor) {
         try {
-          for (const movie of this.actor.castMovies) {
-            const url = `${TYPE.DETAIL}/${CLASS.MOVIE}/${movie.id}`;
-            const response = await fetchFromUrl(url);
-            console.log(response);
-            if (response.item) {
-              this.movies.push(response.item);
-            }
-          }
+          const url = `${TYPE.SEARCH}/${CLASS.MOVIE}/${this.actor.name}`;
+          const response = await fetchFromUrl(url);
+          console.log(response);
+          this.movies = response.items;
         } catch (err) {
           this.error = "Failed to fetch movie details. Please try again.";
           console.error("Error fetching movie details:", err);
@@ -61,6 +56,7 @@ export default {
           this.loading = false;
         }
       }
+
       this.loading = false;
     },
 
@@ -87,6 +83,10 @@ export default {
 
     getGenre(movie) {
       return movie.genreList.map((genre) => genre.value).join(", ");
+    },
+
+    navigateToMovie(movieId) {
+      this.$emit("movie-selected", movieId);
     },
   },
 
@@ -142,13 +142,15 @@ export default {
         </div>
       </div>
 
-      <div v-if="!loading && actor && actor.castMovies && actor.castMovies.length" class="mt-4">
+      <div v-if="!loading && actor && movies.length" class="mt-4">
         <h4>Cast Movies</h4>
         <ul class="list-group">
           <li
             v-for="movie in movies"
             :key="movie.id"
             class="list-group-item"
+            style="cursor: pointer;"
+            @click="navigateToMovie(movie.id)"
           >
             <h5>{{movie.fullTitle}}</h5>
             <p class="card-text"><strong>Rating:</strong> {{ formatRating(movie.ratings) }}</p>

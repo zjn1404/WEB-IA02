@@ -18,6 +18,8 @@ export default {
       this.loading = true;
       setTimeout(() => {
         window.location.href = "index.html";
+        const currentTheme = localStorage.getItem("currentTheme");
+        document.getElementById("app").setAttribute("data-bs-theme", currentTheme);
       }, 500);
     },
   },

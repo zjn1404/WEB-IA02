@@ -36,6 +36,15 @@ export default {
     totalPages() {
       return Math.ceil(this.reviews.length / this.reviewsPerPage);
     },
+
+    actorlists() {
+      const listSize = 4;
+      const lists = [];
+      for (let i = 0; i < this.movie.actorList.length; i += listSize) {
+        lists.push(this.movie.actorList.slice(i, i + listSize));
+      }
+      return lists;
+    },
   },
 
   methods: {
@@ -47,6 +56,7 @@ export default {
         const url = `${TYPE.DETAIL}/${CLASS.MOVIE}/${this.movieId}`;
         const response = await fetchFromUrl(url);
         this.movie = response.item;
+        console.log(this.movie);
       } catch (err) {
         this.error = "Failed to fetch movie details. Please try again.";
         console.error("Error fetching movie details:", err);
@@ -94,9 +104,9 @@ export default {
       return actorList
         .map((actor) => {
           if (actor.asCharacter) {
-        return `<span class="text-primary" style="cursor: pointer" data-actor-id="${actor.id}">${actor.name}</span> as ${actor.asCharacter}`;
+            return `<span class="text-primary" style="cursor: pointer" data-actor-id="${actor.id}">${actor.name}</span> as ${actor.asCharacter}`;
           } else {
-        return `<span class="text-primary" style="cursor: pointer" data-actor-id="${actor.id}">${actor.name}</span>`;
+            return `<span class="text-primary" style="cursor: pointer" data-actor-id="${actor.id}">${actor.name}</span>`;
           }
         })
         .join(", ");
@@ -131,8 +141,7 @@ export default {
       this.$emit("actor-selected", actorId);
     },
 
-    handleActorClick(event) {
-      const actorId = event.target.dataset.actorId;
+    handleActorClick(actorId) {
       if (actorId) {
         this.navigateToActor(actorId);
       }
@@ -165,16 +174,83 @@ export default {
           <div class="card-body">
             <h5 class="card-title">{{ movie.title }} ({{ movie.year }})</h5>
             <p class="card-text"><strong>Rating:</strong> {{ formatRating(movie.ratings) }}</p>
+            <p class="card-text"><strong>Awards:</strong> {{ movie.awards }}</p>
             <p class="card-text"><strong>Genre:</strong> {{ getGenre(movie) }}</p>
+            <p class="card-text"><strong>Release:</strong> {{ formatDate(movie.releaseDate) }}</p>
             <p class="card-text"><strong>Length:</strong> {{ movie.runtimeStr }}</p>
             <p class="card-text"><strong>Plot:</strong> {{ movie.plot }}</p>
             <p class="card-text"><strong>Director:</strong> {{ formatDirectorList(movie.directorList) }}</p>
-            <p class="card-text">
-              <strong>Actors: </strong>
-              <span v-html="formatActorList(movie.actorList)" @click="handleActorClick"></span>
-            </p>
+            <p class="card-text"><strong>Company:</strong> {{ movie.companies }}</p>
           </div>
         </div>
+      </div>
+    </div>
+
+    <div v-if="movie.actorList?.length" class="mt-4">
+      <h5>Casts</h5>
+      <div id="actorCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+          <button 
+            type="button" 
+            v-for="(list, index) in actorlists" 
+            :key="index" 
+            data-bs-target="#actorCarousel" 
+            :data-bs-slide-to="index" 
+            :class="{ active: index === 0 }" 
+            aria-current="index === 0 ? 'true' : undefined" 
+            aria-label="'Slide ' + (index + 1)">
+          </button>
+        </div>
+
+        <div class="carousel-inner">
+          <div 
+            v-for="(list, index) in actorlists" 
+            :key="index" 
+            class="carousel-item" 
+            :class="{ active: index === 0 }">
+            <div class="row justify-content-center">
+              <div 
+                v-for="actor in list" 
+                :key="actor.id" 
+                class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
+                <div 
+                  class="card" 
+                  style="cursor: pointer;" 
+                  @click="handleActorClick(actor.id)"
+                  style="height: 330px;">
+                  <img 
+                    :src="actor.image || 'placeholder.jpg'" 
+                    class="card-img-top" 
+                    :alt="actor.name" 
+                    style="height: 200px;" 
+                    @error="handleImageError">
+                  <div class="card-body text-center d-flex align-items-center flex-column">
+                    <h6 class="card-title text-primary">{{ actor.name }}</h6>
+                    <p class="card-text" v-if="actor.asCharacter">as {{ actor.asCharacter }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button 
+          class="carousel-control-prev" 
+          type="button" 
+          data-bs-target="#actorCarousel" 
+          data-bs-slide="prev"
+          style="width: 32px">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button 
+          class="carousel-control-next" 
+          type="button" 
+          data-bs-target="#actorCarousel" 
+          data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
       </div>
     </div>
 

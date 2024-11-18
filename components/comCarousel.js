@@ -21,16 +21,23 @@ export default {
       this.topRevenue = await fetchFromUrl(revenueUrl).then((response) => {
         return response.items
           .sort((a, b) => {
+            const parseRevenue = (value) => {
+              return value && typeof value === "string"
+                ? parseInt(value.replace(/[^0-9.-]+/g, ""))
+                : 0;
+            };
+
             let revenueA =
-              (a.boxOffice?.openingWeekendUSA || 0) +
-              (a.boxOffice?.grossUSA || 0) +
-              (a.boxOffice?.grossWorldwide || 0) -
-              (a.boxOffice?.budget || 0);
+              (parseRevenue(a.boxOffice?.openingWeekendUSA) || 0) +
+              (parseRevenue(a.boxOffice?.grossUSA) || 0) +
+              (parseRevenue(a.boxOffice?.cumulativeWorldwideGross) || 0) -
+              (parseRevenue(a.boxOffice?.budget) || 0);
+
             let revenueB =
-              (b.boxOffice?.openingWeekendUSA || 0) +
-              (b.boxOffice?.grossUSA || 0) +
-              (b.boxOffice?.grossWorldwide || 0) -
-              (b.boxOffice?.budget || 0);
+              (parseRevenue(b.boxOffice?.openingWeekendUSA) || 0) +
+              (parseRevenue(b.boxOffice?.grossUSA) || 0) +
+              (parseRevenue(b.boxOffice?.cumulativeWorldwideGross) || 0) -
+              (parseRevenue(b.boxOffice?.budget) || 0);
             return revenueB - revenueA;
           })
           .slice(0, 5);

@@ -14,7 +14,21 @@ export default {
       error: null,
       fallbackImage:
         "https://via.placeholder.com/400x600?text=No+Image+Available",
+      currentPage: 1,
+      itemsPerPage: 3,
     };
+  },
+
+  computed: {
+    paginatedMovies() {
+      const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+      const endIndex = startIndex + this.itemsPerPage;
+      return this.movies.slice(startIndex, endIndex);
+    },
+
+    totalPages() {
+      return Math.ceil(this.movies.length / this.itemsPerPage);
+    },
   },
 
   async created() {
@@ -47,7 +61,6 @@ export default {
         try {
           const url = `${TYPE.SEARCH}/${CLASS.MOVIE}/${this.actor.name}`;
           const response = await fetchFromUrl(url);
-          console.log(response);
           this.movies = response.items;
         } catch (err) {
           this.error = "Failed to fetch movie details. Please try again.";
@@ -87,6 +100,12 @@ export default {
 
     navigateToMovie(movieId) {
       this.$emit("movie-selected", movieId);
+    },
+
+    goToPage(page) {
+      if (page >= 1 && page <= this.totalPages) {
+        this.currentPage = page;
+      }
     },
   },
 
@@ -142,11 +161,11 @@ export default {
         </div>
       </div>
 
-      <div v-if="!loading && actor && movies.length" class="mt-4">
+      <div v-if="!loading && actor && paginatedMovies.length" class="mt-4">
         <h4>Cast Movies</h4>
         <ul class="list-group">
           <li
-            v-for="movie in movies"
+            v-for="movie in paginatedMovies"
             :key="movie.id"
             class="list-group-item"
             style="cursor: pointer;"
@@ -158,7 +177,26 @@ export default {
             <p class="card-text"><strong>Plot:</strong> {{ movie.plot }}</p>
           </li>
         </ul>
+        <nav aria-label="Page navigation" class="mt-3">
+          <ul class="pagination justify-content-center">
+            <li class="page-item" :class="{ disabled: currentPage === 1 }">
+              <a class="page-link" href="#" @click.prevent="goToPage(currentPage - 1)">Previous</a>
+            </li>
+            <li
+              class="page-item"
+              v-for="page in totalPages"
+              :key="'page-' + page"
+              :class="{ active: currentPage === page }"
+            >
+              <a class="page-link" href="#" @click.prevent="goToPage(page)">{{ page }}</a>
+            </li>
+            <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+              <a class="page-link" href="#" @click.prevent="goToPage(currentPage + 1)">Next</a>
+            </li>
+          </ul>
+        </nav>
       </div>
+
       <div v-if="!loading && actor && movies.length === 0" class="alert alert-info mt-4">
         No movies available for this actor.
       </div>

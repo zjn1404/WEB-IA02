@@ -166,6 +166,7 @@ export default {
             <h5 class="card-title">{{ movie.title }} ({{ movie.year }})</h5>
             <p class="card-text"><strong>Rating:</strong> {{ formatRating(movie.ratings) }}</p>
             <p class="card-text"><strong>Genre:</strong> {{ getGenre(movie) }}</p>
+            <p class="card-text"><strong>Length:</strong> {{ movie.runtimeStr }}</p>
             <p class="card-text"><strong>Plot:</strong> {{ movie.plot }}</p>
             <p class="card-text"><strong>Director:</strong> {{ formatDirectorList(movie.directorList) }}</p>
             <p class="card-text">
